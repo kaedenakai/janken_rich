@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<script src="js/jquery-2.1.3.min.js"></script>
+<link rel="stylesheet" href="css/sample.css">
+<title>じゃんけん</title>
+</head>
+<body>
+
+<header>
+  <h1>じゃんけん</h1>
+</header>
+
+<main>
+  <div>
+    <h2 id="ant">あなたの手を選んでね</h2>
+  </div>
+  <ul>
+    <li id="gu_btn">
+      <img src="img/gu_img.PNG" alt="グーのイラスト" width="50%" height="100%">
+    </li>
+    <li id="cho_btn">
+      <img src="img/cho_img.PNG" alt="チョキのイラスト" width="45%" height="100%">
+    </li>
+    <li id="par_btn">
+      <img src="img/par_img.PNG" alt="パーのイラスト" width="60%" height="100%">
+    </li>
+  </ul>
+
+  <!-- 相手の手 -->
+  <div>
+    <h2 id="pc">相手の手は・・・</h2>
+    <p id="pc_hands">？</p>
+  </div>
+
+  <!-- じゃんけんの結果 -->
+  <div>
+    <!-- <div id="jud_img"></div> -->
+    <!-- <div id="judgment"></div> -->
+  </div>  
+
+  <!-- ポップアップウィンドウ -->
+  <div id="popup" class="pop">
+    <div class="popclose">✖</div>
+    <div id="popup-content"></div>
+  </div>
+
+</main>
+
+<footer></footer>
+<script>
+$(document).ready(function() {
+    // ポップアップを閉じる処理
+    $(".popclose").on("click", function() {
+        $("#popup").fadeOut();
+    });
+
+    const drawImages = ["img/aiko/aiko01.png", "img/aiko/aiko02.png"]; // あいこの画像リスト
+    const winImages = ["img/kati/kati01.png", "img/kati/kati02.png", "img/kati/kati04.png"]; // 勝ちの画像リスト
+    const loseImages = ["img/make/make01.png", "img/make/make03.png", "img/make/make04.png"]; // 負けの画像リスト
+
+    const showPopup = (resultMessage, resultImage) => {
+        $("#popup-content").html(`<img src="${resultImage}" alt="結果の画像"><p class="result-message">${resultMessage}</p>`); // ポップアップに内容をセット
+        $("#popup").fadeIn(800); // ポップアップを0.8秒かけてフェードイン
+    };
+
+    const handleClick = (userChoice, userImg) => {
+        const b = Math.ceil(Math.random() * 3); // 1～3まで出るランダムな整数
+
+        let resultMessage;
+        let resultImage;
+
+        if (b === 1) {
+            $("#pc_hands").html(`<img src="img/gu_img.PNG" id="gu_sc">`).hide().fadeIn(500, function() {
+                if (userChoice === 'グー') {
+                    resultMessage = "あいこ";
+                    resultImage = drawImages[Math.floor(Math.random() * drawImages.length)];
+                } else if (userChoice === 'チョキ') {
+                    resultMessage = "負け";
+                    resultImage = loseImages[Math.floor(Math.random() * loseImages.length)];
+                } else if (userChoice === 'パー') {
+                    resultMessage = "勝ち";
+                    resultImage = winImages[Math.floor(Math.random() * winImages.length)];
+                }
+                showPopup(resultMessage, resultImage);
+            });
+        } else if (b === 2) {
+            $("#pc_hands").html(`<img src="img/cho_img.PNG" id="cho_sc">`).hide().fadeIn(500, function() {
+                if (userChoice === 'グー') {
+                    resultMessage = "勝ち";
+                    resultImage = winImages[Math.floor(Math.random() * winImages.length)];
+                } else if (userChoice === 'チョキ') {
+                    resultMessage = "あいこ";
+                    resultImage = drawImages[Math.floor(Math.random() * drawImages.length)];
+                } else if (userChoice === 'パー') {
+                    resultMessage = "負け";
+                    resultImage = loseImages[Math.floor(Math.random() * loseImages.length)];
+                }
+                showPopup(resultMessage, resultImage);
+            });
+        } else if (b === 3) {
+            $("#pc_hands").html(`<img src="img/par_img.PNG" id="par_sc">`).hide().fadeIn(500, function() {
+                if (userChoice === 'グー') {
+                    resultMessage = "負け";
+                    resultImage = loseImages[Math.floor(Math.random() * loseImages.length)];
+                } else if (userChoice === 'チョキ') {
+                    resultMessage = "勝ち";
+                    resultImage = winImages[Math.floor(Math.random() * winImages.length)];
+                } else if (userChoice === 'パー') {
+                    resultMessage = "あいこ";
+                    resultImage = drawImages[Math.floor(Math.random() * drawImages.length)];
+                }
+                showPopup(resultMessage, resultImage);
+            });
+        }
+    };
+
+    $("#gu_btn").on("click", function() { handleClick('グー', 'img/gu_img.PNG'); });
+    $("#cho_btn").on("click", function() { handleClick('チョキ', 'img/cho_img.PNG'); });
+    $("#par_btn").on("click", function() { handleClick('パー', 'img/par_img.PNG'); });
+});
+
+
+
+</script>
+</body>
+</html>

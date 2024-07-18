@@ -1,0 +1,134 @@
+body{
+    margin:0;
+    padding:0;
+    text-align:left;
+    font-size: 32px;
+    font-family: "pome", sans-serif;
+}
+@font-face {
+    font-family: "mono";
+    src: url("../font/Monomaniac_One/MonomaniacOne-Regular.ttf") format("truetype");
+    font-display: swap;
+}
+@font-face {
+    font-family: "pome";
+    src: url("../font/Pomeranian-Regular.ttf") format("truetype");
+    font-display: swap;
+}
+header{
+    margin:0 ;
+    background-color: #e597b2;
+    /* border-bottom: 1px solid #ccc; */
+    text-align: center;
+    /* padding-bottom: 10px; */
+}
+header h1{
+    color: #fdeff2;
+    font-size: 100px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+main{
+    /* border-bottom:1px solid #ccc; */
+}
+#ant{
+    text-align: center;
+    /* padding-top: 100px; */
+    margin-top: 100px;
+    padding-bottom: 50px;
+}
+footer{
+    background-color: #fff;
+    /* border-bottom:1px solid #ccc; */
+    text-align: center;
+}
+p{
+    font-size:200%;
+    text-align: center;
+    /* border-bottom:1px solid #fff; */
+    height:200px;
+}
+ul{
+    padding: 0;
+    /* border-top: 1px solid #000000; */
+    display:table;  /* 定義 */
+    table-layout: fixed;
+    width:100%;
+}
+li{
+    text-align: center;
+    /* list-style-type:none; */
+    /* border: 1px solid #666; */
+    /* background-color: #FFF; */
+    display:table-cell;  /* 定義 */
+    cursor: pointer;
+    transition-duration: .3S;
+}
+li:hover{
+    transform: scale(1.2);
+}
+#pc{
+    text-align: center;
+    margin-top: 100px;
+    padding-bottom: 50px;
+}
+#pc_hands{
+    text-align: center;
+    /* width: 60%; */
+}
+#judgment{
+    /* padding-top: 100px; */
+    text-align: center;
+    font-size: 80px;
+}
+#gu_sc{
+    width: 16%;
+}
+#cho_sc{
+    width: 14%;
+}
+#par_sc{
+    width: 22%;
+}
+#jud_img{
+    text-align: center;
+    /* padding-bottom: 100px; */
+}
+#aiko_img{
+    width: 30%;
+}
+
+.pop {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 1000px; /* 横長にするため幅を広げる */
+    height: 700px; /* 高さを小さくする */
+    padding: 20px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    text-align: center; /* 中央揃え */
+}
+
+.pop img {
+    width: 30%; /* 画像がポップアップの横幅を超えないように調整 */
+    height: auto;
+    margin: 0 auto 20px auto; /* 画像の上下の余白を設定し、中央揃え */
+    display: block; /* 画像をブロックレベル要素に */
+}
+
+.popclose {
+    text-align: right;
+    cursor: pointer;
+}
+
+.result-message {
+    color: red; /* 文字色を赤にする */
+    line-height: 1.5;
+    display: block; /* ブロックレベル要素に */
+    vertical-align: middle;
+}
+
