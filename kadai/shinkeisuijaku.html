@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<script src="js/jquery-2.1.3.min.js"></script>
+<link rel="stylesheet" href="css/sample.css">
+<title>キャラクター神経衰弱</title>
+</head>
+<body>
+
+  <div class="title">
+    <div id="titlemoji">ちいかわ神経衰弱</div>
+  </div>
+
+<main>
+  <div id="field"></div>
+ 
+</main>
+
+<footer></footer>
+<script>
+
+//min~maxまでの整数乱数を作る関数をつくる
+function rand(min, max){
+  //function 関数名(引数) { 処理 }
+
+  return Math.floor(Math.random()*(max-min+1))+min;
+  //Math.randomまで：min=1,max=16,+1なので、0~16未満のランダムな数値を返却する
+  //Mat.floor：最後にminを足すことで1~16までを返却可能にする
+}
+
+//配列の要素番号は0から、要素数は1から
+let cards = [
+"1","2","3","4","5","6","7","8",
+"1","2","3","4","5","6","7","8",
+];
+
+//カードの中身をシャッフルする
+for(let i = cards.length-1; i>0; i--){
+  //要素数8-1＝7要素番号7つまり一番後ろから、要素番号2まで1ずつ引く
+
+  let r = rand(0,i); //0~16
+  let tmp = cards[i]; //tmp=8
+  cards[i] = cards[r]; //i=6(ランダム)
+  cards[r] = tmp; //r=6に8を入れる、つまり交換
+
+}
+
+//cards内のすべての要素分、divを作成する
+
+let field = document.getElementById("field");
+//id=filedをとってきて変数fieldに入れる
+
+for(let i=0; i<cards.length; i++){
+  //変数iを0で初期化し、配列cardsの要素数（16）より小さい間for内を繰り返し、そのたびにiに1ずつ加算
+  //つまり0~15＝16回繰り返される
+
+  let elm = document.createElement("div");
+  //divを作成して変数elmに追加
+
+  elm.className = "card";
+  //変数elmにクラスcardを入れる
+
+  elm.innerHTML = ""; //cards[i];
+  //変数elmにcardsの要素番号0～の中身を入れる
+  elm.index = i;
+  elm.onclick = click;
+  //クリックされたときにclickを呼ぶようにする 
+  field.appendChild(elm);
+  //上で作った変数fieldに、変数elm(で作ったdiv)を入れる
+
+}
+
+let first = null;
+let second = null;
+let timer = null;
+
+//クリックされたときの処理
+function click(e){
+  
+  if(timer){
+    //もし2枚開けて裏返る前にクリックされたら、タイマーを強制終了させてjudgeへ
+    clearTimeout(timer); 
+    judge();
+  }
+
+  let elm = e.target;
+
+  elm.innerHTML = cards[ elm.index ];
+  //クリックしたカードの要素を取り出して上書きする＝裏返す
+  
+  if( !first ){
+    first = elm;
+  }else if( first.index == elm.index ){ //1回目とクリックした位置が同じ場合
+    return;
+  }else{
+    second = elm;
+    timer = setTimeout( judge , 1000); //1秒後にjudge関数を動かす
+  }
+}
+
+//judge関数の中身
+function judge(){
+  if( first.innerHTML == second.innerHTML ){ //1回目と2回目のHTMLが同じ場合
+      first.style.visibility = "hidden";
+      second.style.visibility = "hidden";
+    }else{
+      first.innerHTML = ""; //元に戻す、裏返す
+      second.innerHTML = "";
+    }
+    first = null;
+    second = null;
+    timer = null;
+  }
+
+
+</script>
+</body>
+</html>
