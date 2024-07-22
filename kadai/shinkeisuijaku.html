@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width">
 <script src="js/jquery-2.1.3.min.js"></script>
 <link rel="stylesheet" href="css/sample.css">
-<title>キャラクター神経衰弱</title>
+<title>ちいかわ神経衰弱</title>
 </head>
 <body>
 
@@ -14,80 +14,99 @@
   </div>
 
 <main>
-  <div id="clock"></div>
+  <div id="moji">
+    <div id="clock">じかん: 0.00秒</div>
+    <button id="replay-btn" style="display: none;">REPLAY</button>
+  </div>
   <div id="field"></div>
+  
  
 </main>
 
 <footer></footer>
 <script>
 
-//min~maxまでの整数乱数を作る関数をつくる
+//min~maxまでの整数乱数をつくるrand
 function rand(min, max){
-  //function 関数名(引数) { 処理 }
-
+      //function 関数名(引数) { 処理 }
   return Math.floor(Math.random()*(max-min+1))+min;
-  //Math.randomまで：min=1,max=16,+1なので、0~16未満のランダムな数値を返却する
-  //Mat.floor：最後にminを足すことで1~16までを返却可能にする
+      //Math.randomまで：min=1,max=16,+1なので、0~16未満のランダムな数値を返却する
+      //Mat.floor：最後にminを足すことで1~16までを返却可能にする
 }
 
 //配列の要素番号は0から、要素数は1から
+//カードの中身をcardsに格納する
 let cards = [
-"1","2","3","4","5","6","7","8",
-"1","2","3","4","5","6","7","8",
+  "img/chi.PNG", "img/hachi.PNG", "img/kani.PNG", "img/kuri.PNG",
+  "img/momo.PNG", "img/rakko.PNG", "img/shisa.PNG", "img/usa.PNG",
+  "img/chi.PNG", "img/hachi.PNG", "img/kani.PNG", "img/kuri.PNG",
+  "img/momo.PNG", "img/rakko.PNG", "img/shisa.PNG", "img/usa.PNG"
 ];
 
-//カードの中身をシャッフルする
-for(let i = cards.length-1; i>0; i--){
-  //要素数8-1＝7要素番号7つまり一番後ろから、要素番号2まで1ずつ引く
-
-  let r = rand(0,i); //0~16
-  let tmp = cards[i]; //tmp=8
-  cards[i] = cards[r]; //i=6(ランダム)
-  cards[r] = tmp; //r=6に8を入れる、つまり交換
-
+//cardsの順番をrandを使ってシャッフルするshuffleCards
+function shuffleCards(){
+  for(let i = cards.length-1; i>0; i--){
+        //要素数8-1＝7要素番号7つまり一番後ろから、要素番号2まで1ずつ引く
+    let r = rand(0,i); //0~16
+    let tmp = cards[i]; //tmp=8
+    cards[i] = cards[r]; //i=6(ランダム)
+    cards[r] = tmp; //r=6に8を入れる、つまり交換
+  }
 }
 
-//cards内のすべての要素分、divを作成する
+//cards内のすべての要素分、つまり16個divを作成するdisplayCards
+function displayCards(){
+  let field = document.getElementById("field");
+      //id=filedをとってきて変数fieldに入れる
+  field.innerHTML = "";
+      //すでに入っている場合は、fieldの中身をクリアして、下でもう一回作り直す
 
-let field = document.getElementById("field");
-//id=filedをとってきて変数fieldに入れる
-
-for(let i=0; i<cards.length; i++){
-  //変数iを0で初期化し、配列cardsの要素数（16）より小さい間for内を繰り返し、そのたびにiに1ずつ加算
-  //つまり0~15＝16回繰り返される
-
-  let elm = document.createElement("div");
-  //divを作成して変数elmに追加
-
-  elm.className = "card";
-  //変数elmにクラスcardを入れる
-
-  elm.innerHTML = ""; //cards[i];
-  //変数elmにcardsの要素番号0～の中身を入れる
-  elm.index = i;
-  elm.onclick = click;
-  //クリックされたときにclickを呼ぶようにする 
-  field.appendChild(elm);
-  //上で作った変数fieldに、変数elm(で作ったdiv)を入れる
-
+  for(let i=0; i<cards.length; i++){
+        //変数iを0で初期化し、配列cardsの要素数（16）より小さい間for内を繰り返し、そのたびにiに1ずつ加算
+        //つまり0~15＝16回繰り返される
+    let elm = document.createElement("div");
+        //divを作成して変数elmに追加
+    elm.className = "card";
+        //変数elm、つまり作成したdivにクラスcardを紐づける
+    elm.innerHTML = ""; //cards[i];
+        //変数elmにcardsの要素番号0～の中身を入れる
+    elm.index = i;
+        //番号を頭から降りなおす
+    elm.onclick = click;
+        //クリックされたときにclickを呼ぶようにする 
+    field.appendChild(elm);
+        //上で作った変数fieldに、変数elm(で作ったdiv)を入れる
+        //つまり、HTML上のfieldに表示される
+  }
 }
-
-// //全体タイマー
-// let count = 0;
-// let clock = document.getElementById("clock");
-// let timer2 = setInterval( clock, 100 );
-// function clock(){
-//   clock.innerText = "タイム:" +(++count);
-// }
 
 let first = null;
 let second = null;
 let timer = null;
+let timerInterval = null;
+let startTime = null;
+
+// タイマーの表示を更新するupdateTimer
+function updateTimer() {
+  if (startTime) {
+    const elapsed = Date.now() - startTime;   //今の時間‐開始時間をミリ秒で取得
+    const seconds = Math.floor(elapsed / 1000);   // ミリ秒を1000で割ることで経過した秒数を取得
+    const milliseconds = elapsed % 1000;   // 1000で割ったときの余りを求めて、ミリ秒数を取得
+    const displaySeconds = String(seconds).padStart(2, '0');   // 数字を文字に変換して、0を入れて2桁にする
+    const displayMilliseconds = String(Math.floor(milliseconds / 10)).padStart(2, '0');   // ミリ秒数を2桁に整形
+    document.getElementById("clock").innerText = `じかん: ${displaySeconds}.${displayMilliseconds}秒`;
+  }
+}
+
+// タイマーを開始するstartGame
+function startGame() {
+  startTime = Date.now();  // ゲーム開始時刻を記録する
+  timerInterval = setInterval(updateTimer, 100);  // 100ミリ秒ごとにupdateTimerを呼び出す
+}
+
 
 //クリックされたときの処理
 function click(e){
-  
   if(timer){
     //もし2枚開けて裏返る前にクリックされたら、タイマーを強制終了させてjudgeへ
     clearTimeout(timer); 
@@ -95,12 +114,12 @@ function click(e){
   }
 
   let elm = e.target;
-
-  elm.innerHTML = cards[ elm.index ];
-  //クリックしたカードの要素を取り出して上書きする＝裏返す
+  elm.classList.add('selected');  // クリックされたカードに 'selected' クラスを追加
+  elm.innerHTML = `<img src="${cards[elm.index]}" alt="card image">`;  //クリックしたカードの要素を取り出して上書きする＝裏返す
   
   if( !first ){
     first = elm;
+    if (!startTime) startGame();  //初回の場合はタイマーを開始するstartGameを呼ぶ
   }else if( first.index == elm.index ){ //1回目とクリックした位置が同じ場合
     return;
   }else{
@@ -114,15 +133,51 @@ function judge(){
   if( first.innerHTML == second.innerHTML ){ //1回目と2回目のHTMLが同じ場合
       first.style.visibility = "hidden";
       second.style.visibility = "hidden";
+      if (document.querySelectorAll('.card:not([style*="visibility: hidden"])').length === 0) {
+        stopGame();  // hiddenになっていないカードが0の場合、stopGameを呼ぶ
+      }
     }else{
       first.innerHTML = ""; //元に戻す、裏返す
       second.innerHTML = "";
     }
+    first.classList.remove('selected'); // selectedクラスを削除
+    second.classList.remove('selected'); 
     first = null;
     second = null;
     timer = null;
-  }
+}
 
+// タイマーを停止するstopGame
+function stopGame() {
+  if (timerInterval) {
+    clearInterval(timerInterval);  // タイマーのインターバルをクリアする
+    timerInterval = null;
+  }
+  startTime = null;  // 開始時間をクリアする
+  document.getElementById("replay-btn").style.display = "block";  // REPLAYボタンを表示する
+}
+
+// ゲームをリセットするresetGame
+function resetGame() {
+  document.querySelectorAll('.card').forEach(card => {  // すべてのカードに対して、
+    card.style.visibility = "visible";  // hiddenをもとに戻す
+    card.innerHTML = "";  // カードの中身をクリアする
+    card.classList.remove('selected');  // 選択状態をクリアする
+  });
+  
+  shuffleCards();
+  displayCards();
+  document.getElementById("replay-btn").style.display = "none";   // REPLAYボタンを非表示にする
+  startGame();
+}
+
+document.getElementById("replay-btn").addEventListener("click", resetGame);
+// REPLAYボタンがクリックされたとき、resetGameを呼ぶ
+
+window.onload = function() { //ページを開いたときにカードが出ているように
+  shuffleCards();
+  displayCards();
+};
 
 
 </script>
