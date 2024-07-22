@@ -82,14 +82,15 @@ main {
     font-weight: bold;
     padding: 40px;
     margin-top: 60px;
-    background-color: #ffcc00; 
+    background-color: #69eb69; 
     color: white;
     border: none;
     cursor: pointer;
     transition-duration: .3s;
+    border-radius: 15px;
   }
   
   #replay-btn:hover {
     transform: scale(1.2);
-    background-color: #ffff66;
+    background-color: #7ef8a2;
   }
